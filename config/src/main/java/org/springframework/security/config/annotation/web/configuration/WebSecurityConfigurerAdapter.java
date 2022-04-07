@@ -460,6 +460,9 @@ public abstract class WebSecurityConfigurerAdapter implements WebSecurityConfigu
 		@Override
 		public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 			if (this.delegate != null) {
+				if (this == this.delegate) {
+                    throw new IllegalStateException("Infinite recursion occured while loading user by name.");
+                }
 				return this.delegate.loadUserByUsername(username);
 			}
 			synchronized (this.delegateMonitor) {
